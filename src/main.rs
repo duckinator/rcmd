@@ -3,7 +3,7 @@ extern crate rouille;
 use rouille::Response;
 
 fn url_for(q: String) -> String {
-    let parts: Vec<&str> = q.split_whitespace().collect();
+    let parts: Vec<_> = q.split_whitespace().collect();
     let cmd = parts[0];
     let args = parts[1..].join(" ");
 
