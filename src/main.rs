@@ -2,12 +2,8 @@
 extern crate rouille;
 use rouille::Response;
 
-fn url_for(q: String) -> String {
-    let parts: Vec<_> = q.split_whitespace().collect();
-    let cmd = parts[0];
-    let args = parts[1..].join(" ");
-
-    println!("q={}", q);
+fn url_for(cmd: &str, args: &str) -> String {
+    println!("cmd={}, args={}", cmd, args);
     match cmd {
         "g"|"google"    => format!("https://google.com/search?q={}", args),
         _               => format!("/?invalid=true&q={}", cmd),
@@ -16,7 +12,11 @@ fn url_for(q: String) -> String {
 
 fn search(request: &rouille::Request) -> rouille::Response {
     if let Some(q) = request.get_param("q") {
-        Response::redirect_303(url_for(q))
+        let parts: Vec<_> = q.split_whitespace().collect();
+        let cmd = parts[0];
+        let args = parts[1..].join(" ");
+
+        Response::redirect_303(url_for(&cmd, &args))
     } else {
         Response::text("No query provided.")
     }
