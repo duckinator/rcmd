@@ -92,14 +92,17 @@ fn home(commands: &Vec<Command>, request: &rouille::Request) -> rouille::Respons
 }
 
 fn main() {
+    let port = std::env::var("PORT").unwrap_or("8000".to_string());
+    let host = format!("0.0.0.0:{}", port);
+
     let commands = load_commands();
     for cmd in load_commands() {
         println!("{}({}) = {}", cmd.name, cmd.args, cmd.dest);
         println!("  aka {}", cmd.alias);
     }
 
-    println!("Listening on localhost:8000.");
-    rouille::start_server("localhost:8000", move |request| {
+    println!("Listening on {}.", host);
+    rouille::start_server(host, move |request| {
         router!(request,
                 (GET) (/)       => { home(&commands, request) },
                 (GET) (/search) => { search(&commands, request) },
