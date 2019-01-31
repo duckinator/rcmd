@@ -1,0 +1,7 @@
+[package]
+name = "rcmd"
+version = "0.1.0"
+authors = ["Ellen Marie Dash <me@duckie.co>"]
+edition = "2018"
+
+[dependencies]
