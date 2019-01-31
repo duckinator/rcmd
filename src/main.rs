@@ -70,6 +70,27 @@ fn search(commands: &Vec<Command>, request: &rouille::Request) -> rouille::Respo
     }
 }
 
+fn home(commands: &Vec<Command>, request: &rouille::Request) -> rouille::Response {
+    let q = request.get_param("q").unwrap_or("".to_string());
+    let invalid_str = request.get_param("invalid").unwrap_or("".to_string());
+    let invalid = invalid_str == "true";
+
+    let mut response = HEAD.to_string();
+    if invalid {
+        response.push_str(&format!("<p>No such command: {}</p>", q));
+    }
+
+    response.push_str(FORM);
+
+    response.push_str("\n\n<p>Commands:</p><ul>\n");
+    for cmd in commands {
+        response.push_str(&format!("    <li>{} {}</li>\n", cmd.name, cmd.args));
+    }
+    response.push_str("</ul>\n");
+
+    Response::html(response)
+}
+
 fn main() {
     let commands = load_commands();
     for cmd in load_commands() {
@@ -80,15 +101,15 @@ fn main() {
     println!("Listening on localhost:8000.");
     rouille::start_server("localhost:8000", move |request| {
         router!(request,
-                (GET) (/)       => { Response::html(FORM) },
+                (GET) (/)       => { home(&commands, request) },
                 (GET) (/search) => { search(&commands, request) },
                 _ => Response::empty_404()
         )
     })
 }
 
-static FORM: &'static str =
-r#"<!doctype html>
+static HEAD: &'static str = "<!doctype html>\n";
+static FORM: &'static str = r#"
 <form action="/search">
     <input type="text" name="q" id="q">
     <input type="submit" value="Go">
