@@ -1,0 +1,7 @@
+google|g        :query  = https://www.google.com/search?q=:query
+duckduckgo|ddg  :query  = https://duckduckgo.com/?q=:query
+twitter|tw      :handle = https://www.twitter.com/:handle
+youtube|yt      :query  = https://www.youtube.com/results?search_query=:query
+wikipedia|wp    :query  = https://en.wikipedia.org/w/index.php?search=:query
+travis|tr       :repo   = https://travis-ci.org/:repo
+subdomain       :domain :subdomain   = http://:subdomain.:domain
